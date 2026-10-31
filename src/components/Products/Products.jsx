@@ -1,26 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { categories, products, categoryName } from '../../data/products.js';
 import { Icon, SectionHead, SmartImage } from '../ui/ui.jsx';
 import { useTilt } from '../../lib/motion.js';
 import { enquiry } from '../../lib/contact.js';
+import { useCatalog } from '../../lib/catalog.jsx';
+import { useCart } from '../../lib/cart.jsx';
+import { SIZES, formatINR } from '../../lib/api/shape.js';
 import './Products.css';
 
-function EnquireButton({ product, className = 'btn btn--primary btn--sm' }) {
-  const action = enquiry(product);
+function StockChips({ stock }) {
+  if (!stock) return null;
   return (
-    <a
-      href={action.href}
-      className={className}
-      {...(action.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      aria-label={`Enquire now about D.No ${product.dno}, ${product.name}`}
-    >
-      Enquire Now <Icon name="arrow" size={16} />
-    </a>
+    <ul className="stock-chips" aria-label="Ready stock by size">
+      {SIZES.map((s) => (
+        <li key={s} className={stock[s] > 0 ? 'is-in' : 'is-req'} title={stock[s] > 0 ? `${stock[s]} ready` : 'On request'}>
+          {s}
+          <span className="sr-only">{stock[s] > 0 ? `: ${stock[s]} ready` : ': on request'}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
 function ProductCard({ product, index, onView }) {
   const tilt = useTilt();
+  const { categoryName } = useCatalog();
+  const cart = useCart();
+  const inCart = cart.designs.find((d) => d.pid === product.pid)?.pieces || 0;
+  const ask = enquiry(product);
+
   return (
     <li className="pcard" style={{ '--i': index }}>
       <article ref={tilt} className="pcard__inner" aria-labelledby={`p-${product.id}`}>
@@ -42,6 +49,11 @@ function ProductCard({ product, index, onView }) {
           <span className="pcard__dno" aria-hidden="true">
             D.No {product.dno}
           </span>
+          {inCart > 0 && (
+            <span className="pcard__incart" aria-hidden="true">
+              {inCart} in order
+            </span>
+          )}
         </button>
 
         <div className="pcard__body">
@@ -56,9 +68,35 @@ function ProductCard({ product, index, onView }) {
             <li>{product.dupatta}</li>
             {product.sizes && <li>{product.sizes}</li>}
           </ul>
+          <StockChips stock={product.stock} />
           <div className="pcard__foot">
-            {product.price ? <p className="pcard__price">{product.price}</p> : <span />}
-            <EnquireButton product={product} />
+            {product.price != null ? (
+              <p className="pcard__price">
+                {formatINR(product.price)} <small>/ pc</small>
+              </p>
+            ) : (
+              <span />
+            )}
+            <div className="pcard__actions">
+              <a
+                href={ask.href}
+                className="pcard__ask"
+                {...(ask.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                aria-label={`Enquire on WhatsApp about D.No ${product.dno}`}
+                title="Enquire on WhatsApp"
+              >
+                <Icon name="chat" size={18} />
+              </a>
+              <button
+                type="button"
+                className="btn btn--primary btn--sm"
+                onClick={() => cart.openSheet(product)}
+                disabled={!product.pid}
+                aria-label={`${inCart ? 'Edit order for' : 'Add to order'} D.No ${product.dno}`}
+              >
+                {inCart ? 'Edit order' : 'Add to order'} <Icon name="arrow" size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </article>
@@ -68,6 +106,8 @@ function ProductCard({ product, index, onView }) {
 
 function Lightbox({ product, onClose }) {
   const ref = useRef(null);
+  const { categoryName } = useCatalog();
+  const cart = useCart();
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
@@ -120,14 +160,32 @@ function Lightbox({ product, onClose }) {
                   <dd>{product.sizes}</dd>
                 </div>
               )}
-              {product.price && (
+              {product.price != null && (
                 <div>
-                  <dt>Price</dt>
-                  <dd>{product.price}</dd>
+                  <dt>Rate</dt>
+                  <dd>{formatINR(product.price)} / pc</dd>
+                </div>
+              )}
+              {product.stock && (
+                <div>
+                  <dt>Ready stock</dt>
+                  <dd>
+                    {SIZES.map((s) => `${s} ${product.stock[s] > 0 ? product.stock[s] : '–'}`).join(' · ')}
+                  </dd>
                 </div>
               )}
             </dl>
-            <EnquireButton product={product} className="btn btn--primary" />
+            <button
+              type="button"
+              className="btn btn--primary"
+              disabled={!product.pid}
+              onClick={() => {
+                onClose();
+                cart.openSheet(product);
+              }}
+            >
+              Add to order <Icon name="arrow" size={18} />
+            </button>
           </div>
         </div>
       )}
@@ -137,6 +195,7 @@ function Lightbox({ product, onClose }) {
 
 export default function Products({ category, onCategory }) {
   const [viewing, setViewing] = useState(null);
+  const { products, categories, categoryName } = useCatalog();
   const list = category === 'all' ? products : products.filter((p) => p.category === category);
   const filters = [{ id: 'all', name: 'All designs' }, ...categories];
 
@@ -151,12 +210,13 @@ export default function Products({ category, onCategory }) {
               The <em className="gold-text">collection.</em>
             </>
           }
-          intro="Tap any design to see the full catalogue card with close-ups of the embroidery, bottom and dupatta."
+          intro="Pick quantities by size for any design and send us your order — we confirm availability and dispatch on WhatsApp."
         />
 
         <div className="filters" role="group" aria-label="Filter by fabric">
           {filters.map((f) => {
             const count = f.id === 'all' ? products.length : products.filter((p) => p.category === f.id).length;
+            if (f.id !== 'all' && count === 0) return null;
             return (
               <button
                 key={f.id}
@@ -171,6 +231,10 @@ export default function Products({ category, onCategory }) {
             );
           })}
         </div>
+
+        <p className="stock-legend">
+          <span className="is-in">M</span> ready stock <span className="is-req">M</span> on request
+        </p>
 
         <p className="sr-only" aria-live="polite">
           Showing {list.length} {list.length === 1 ? 'design' : 'designs'}

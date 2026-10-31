@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { Icon } from '../ui/ui.jsx';
 import { directionsUrl } from '../../data/business.js';
-import { categories, products, categoryName } from '../../data/products.js';
+import { useCatalog } from '../../lib/catalog.jsx';
 import { prefersReducedMotion } from '../../lib/motion.js';
 import './Hero.css';
 
-const featured = ['1153', '1130', '1150'].map((id) => products.find((p) => p.id === id));
+const FEATURED = ['1153', '1130', '1150'];
 
 export default function Hero() {
   const ref = useRef(null);
+  const { categories, products, categoryName } = useCatalog();
+  const picked = FEATURED.map((id) => products.find((p) => p.id === id)).filter(Boolean);
+  const featured = picked.length === 3 ? picked : products.slice(0, 3);
 
   // Pointer + scroll parallax via CSS custom properties (no animation library).
   useEffect(() => {

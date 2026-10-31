@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrandMark, Icon } from '../ui/ui.jsx';
 import { business } from '../../data/business.js';
+import { useCart } from '../../lib/cart.jsx';
 import './Navbar.css';
 
 const links = [
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('home');
+  const cart = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -83,6 +85,18 @@ export default function Navbar() {
             </a>
           </li>
         </ul>
+
+        <button
+          type="button"
+          className="nav__cart"
+          onClick={cart.openCart}
+          aria-label={`Your order: ${cart.pieces} pieces`}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6 7h12l-1 13H7L6 7Zm3 0a3 3 0 0 1 6 0" />
+          </svg>
+          {cart.pieces > 0 && <span className="nav__badge">{cart.pieces > 999 ? '999+' : cart.pieces}</span>}
+        </button>
 
         <a href="#products" className="btn btn--primary btn--sm nav__cta">
           View Products

@@ -1,12 +1,13 @@
 import { business } from '../../data/business.js';
-import { categories, products } from '../../data/products.js';
+import { useCatalog } from '../../lib/catalog.jsx';
 import { Icon, Placeholder, Reveal, SectionHead } from '../ui/ui.jsx';
 import { useTilt } from '../../lib/motion.js';
 import './WhyChooseUs.css';
 
 // Facts counted straight from the catalogue data, so they stay accurate as products change.
-const count = (fn) => products.filter(fn).length;
-const catalogueFacts = [
+function factsFor(products, categories) {
+  const count = (fn) => products.filter(fn).length;
+  return [
   {
     icon: 'layers',
     title: 'Complete 3-piece sets',
@@ -32,6 +33,7 @@ const catalogueFacts = [
     stat: `${categories.length} fabric lines`,
   },
 ];
+}
 
 function Card({ item, index }) {
   const tilt = useTilt();
@@ -50,6 +52,8 @@ function Card({ item, index }) {
 }
 
 export default function WhyChooseUs() {
+  const { products, categories } = useCatalog();
+  const catalogueFacts = factsFor(products, categories);
   const reasons = business.reasons ?? [];
   return (
     <section id="why" className="section why" aria-labelledby="why-title">

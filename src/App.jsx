@@ -8,6 +8,8 @@ import About from './components/About/About.jsx';
 import Location from './components/Location/Location.jsx';
 import Contact from './components/Contact/Contact.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import OrderSheet from './components/Cart/OrderSheet.jsx';
+import CartDrawer from './components/Cart/CartDrawer.jsx';
 
 export default function App() {
   // Shared so category cards and footer links can pre-filter the product grid.
@@ -29,6 +31,8 @@ export default function App() {
         <Contact />
       </main>
       <Footer onCategory={setCategory} />
+      <OrderSheet />
+      <CartDrawer />
     </>
   );
 }

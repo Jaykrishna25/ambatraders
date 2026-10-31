@@ -1,9 +1,10 @@
 import { business } from '../../data/business.js';
-import { products, categories } from '../../data/products.js';
+import { useCatalog } from '../../lib/catalog.jsx';
 import { Reveal, SectionHead, SmartImage } from '../ui/ui.jsx';
 import './About.css';
 
 export default function About() {
+  const { products, categories } = useCatalog();
   const shop = business.shopImages?.[0];
   return (
     <section id="about" className="section about" aria-labelledby="about-title">

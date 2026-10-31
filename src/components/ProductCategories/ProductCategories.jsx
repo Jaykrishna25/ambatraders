@@ -1,10 +1,11 @@
-import { categories, products } from '../../data/products.js';
+import { useCatalog } from '../../lib/catalog.jsx';
 import { Icon, Reveal, SectionHead, SmartImage } from '../ui/ui.jsx';
 import { useTilt } from '../../lib/motion.js';
 import './ProductCategories.css';
 
 function CategoryCard({ category, index, onSelect }) {
   const tilt = useTilt();
+  const { products } = useCatalog();
   const count = products.filter((p) => p.category === category.id).length;
   return (
     <Reveal as="li" delay={index * 90} className="cat">
@@ -37,6 +38,7 @@ function CategoryCard({ category, index, onSelect }) {
 }
 
 export default function ProductCategories({ onSelect }) {
+  const { categories } = useCatalog();
   return (
     <section id="categories" className="section cats" aria-labelledby="cats-title">
       <div className="marquee" aria-hidden="true">
@@ -59,7 +61,7 @@ export default function ProductCategories({ onSelect }) {
           eyebrow="Collections"
           title={
             <>
-              Five fabric lines, <em className="gold-text">one standard.</em>
+              Every fabric line, <em className="gold-text">one standard.</em>
             </>
           }
           intro="Choose a fabric to see every design in it — each one a complete three-piece set."

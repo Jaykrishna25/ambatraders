@@ -424,3 +424,116 @@
     animation: none;
   }
 }
+
+/* ---------- Stock + ordering ---------- */
+.stock-chips {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.85rem;
+}
+.stock-chips li,
+.stock-legend span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.1rem;
+  height: 1.6rem;
+  padding-inline: 0.35rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.stock-chips .is-in,
+.stock-legend .is-in {
+  background: rgba(120, 190, 120, 0.14);
+  border: 1px solid rgba(140, 210, 140, 0.35);
+  color: #b9e6b3;
+}
+.stock-chips .is-req,
+.stock-legend .is-req {
+  border: 1px dashed var(--border-strong);
+  color: var(--text-dim);
+}
+.stock-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: -1rem 0 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+.stock-legend span:nth-of-type(2) {
+  margin-left: 0.75rem;
+}
+
+.pcard__price small {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.pcard__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.pcard__ask {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  color: var(--gold-soft);
+  transition: background-color 0.3s, border-color 0.3s, transform 0.3s var(--ease-out);
+}
+.pcard__ask:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--gold) 60%, transparent);
+  background: rgba(255, 240, 225, 0.06);
+}
+.pcard__incart {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--grad-gold);
+  color: #24160f;
+  font-size: 0.72rem;
+  font-weight: 800;
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.6);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+@media (max-width: 559.98px) {
+  .stock-chips {
+    margin-top: 0.5rem;
+    gap: 0.2rem;
+  }
+  .stock-chips li {
+    min-width: 0;
+    flex: 1;
+    height: 1.4rem;
+    font-size: 0.6rem;
+  }
+  .pcard__actions {
+    width: 100%;
+  }
+  .pcard__actions .btn {
+    flex: 1;
+  }
+  .pcard__ask {
+    width: 36px;
+    height: 36px;
+  }
+  .pcard__price {
+    font-size: 1.15rem;
+  }
+}

@@ -1,11 +1,12 @@
 import { business, directionsUrl } from '../../data/business.js';
-import { categories } from '../../data/products.js';
+import { useCatalog } from '../../lib/catalog.jsx';
 import { phoneHref } from '../../lib/contact.js';
 import './Footer.css';
 
 const year = new Date().getFullYear();
 
 export default function Footer({ onCategory }) {
+  const { categories } = useCatalog();
   return (
     <footer className="footer">
       <div className="container footer__inner">
