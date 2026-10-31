@@ -1,0 +1,145 @@
+.contact {
+  overflow: hidden;
+  background: var(--bg);
+}
+.contact__glow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(1100px, 140vw);
+  height: 520px;
+  translate: -50% -30%;
+  background:
+    radial-gradient(closest-side, rgba(168, 66, 30, 0.55), transparent),
+    radial-gradient(40% 50% at 60% 60%, rgba(216, 179, 122, 0.2), transparent);
+  filter: blur(30px);
+  pointer-events: none;
+}
+.contact .container {
+  position: relative;
+}
+
+.contact__cta {
+  max-width: 46rem;
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+}
+.contact__cta .eyebrow::after {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+.contact__cta h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.contact__cta em {
+  font-style: italic;
+  font-weight: 500;
+}
+.contact__intro {
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+.contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.contact__grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+}
+.method {
+  perspective: 900px;
+}
+.method__card {
+  --rx: 0;
+  --ry: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  transform: rotateX(calc(var(--rx) * 5deg)) rotateY(calc(var(--ry) * 5deg));
+  transition: transform 0.6s var(--ease-soft), border-color 0.4s, box-shadow 0.4s;
+}
+a.method__card:hover {
+  border-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  box-shadow: var(--shadow-2);
+}
+.method__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(241, 215, 166, 0.3);
+  background: rgba(241, 215, 166, 0.1);
+  color: var(--gold-soft);
+}
+.method__label {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.method__value {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.method__go {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  color: var(--text-dim);
+  transition: transform 0.4s var(--ease-out), color 0.3s;
+}
+a.method__card:hover .method__go {
+  color: var(--gold-soft);
+  transform: translate(2px, -2px);
+}
+
+.contact__hours {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.contact__hours .icon {
+  color: var(--gold);
+}
+
+.method__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.method__value .detail-line {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
